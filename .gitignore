@@ -1,0 +1,38 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# Secrets
+.env
+.env.local
+# Node
+node_modules/
+# macOS
+.DS_Store
+**/.DS_Store
+
+# ---- Kept on this Mac only, never uploaded ----
+# Other students' details (timetables with emails, team lists)
+modules/*/shared/*Student-Timetables*
+modules/*/activities/*-teams.txt
+# Your marks (source + the app's generated copies)
+modules/*/assessment.md
+_meta/app-v2/explore/marks/marks-data.js
+_meta/app-v2/explore/nav/data.js
+_meta/app-v2/phone/snapshot.json
+# Dev backups and snapshots
+_meta/dev/
+# ---- Public showcase: app code only. Course material + personal data stay on this Mac ----
+modules/
+year/
+calendar/
+revision/
+deadlines.md
+_meta/needs-from-you.md
+_meta/sync-log.md
+_meta/sources.md
+_meta/app-v2/explore/
+_meta/app-v2/static/canvas-links.json
+_meta/*.tar.gz

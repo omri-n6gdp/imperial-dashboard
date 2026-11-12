@@ -1,0 +1,126 @@
+
+/* ---------------- ask a question: a glass pill left of the nav, and a chat panel ---------------- */
+.ask {
+  position: absolute; right: calc(100% + 8px); top: 0; bottom: 0; display: flex; align-items: center; gap: 8px; padding: 0 17px 0 14px;
+  border-radius: 99px; background: var(--glass); border: 1px solid var(--edge); color: #fff; cursor: pointer;
+  font: 600 15px/1 'Inter Tight', system-ui, sans-serif; letter-spacing: -.01em; white-space: nowrap;
+  backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  transition: border-color .15s, background .15s, transform .12s;
+}
+.ask svg { width: 18px; height: 18px; flex: none; }
+.ask:hover { border-color: rgba(255, 255, 255, .26); }
+.ask:active { transform: scale(.96); }
+.ask:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.navbar.asking .ask { background: #fff; color: #0a0a14; border-color: #fff; }
+.ab-compact .ask { width: 46px; padding: 0; justify-content: center; }
+.ab-compact .ask span { display: none; }
+
+.ap {
+  position: fixed; z-index: 50; top: 96px; left: 50%; width: min(780px, calc(100vw - 32px)); height: min(calc(100vh - 124px), 780px);
+  display: flex; flex-direction: column; border-radius: 24px; background: rgba(9, 11, 24, .9); border: 1px solid rgba(255, 255, 255, .15);
+  backdrop-filter: blur(30px) saturate(1.2); -webkit-backdrop-filter: blur(30px) saturate(1.2); box-shadow: 0 30px 90px rgba(0, 0, 0, .55);
+  opacity: 0; transform: translate(-50%, -8px); transition: opacity .2s, transform .3s var(--ease);
+}
+.ap.on { opacity: 1; transform: translate(-50%, 0); }
+.ap-head { display: flex; align-items: center; gap: 10px; padding: 16px 16px 12px 22px; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+.ap-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ap-title b { font-size: 17px; font-weight: 750; letter-spacing: -.02em; }
+.ap-sub { font-size: 12.5px; opacity: .6; }
+.ap-eng button small { font-size: 11px; opacity: .6; margin-left: 2px; }
+.ap-eng button.on small { opacity: .7; }
+.ap-icon { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: #fff; cursor: pointer; font-size: 15px; }
+.ap-icon:hover { background: rgba(255, 255, 255, .14); }
+
+.ap-body { flex: 1; min-height: 0; overflow: auto; padding: 16px 22px 8px; overscroll-behavior: contain; scrollbar-width: thin; }
+.ap-msg { margin: 0 0 16px; }
+.ap-msg.u { margin-left: auto; width: fit-content; max-width: 82%; padding: 10px 14px; border-radius: 16px 16px 4px 16px; background: rgba(255, 255, 255, .13); font-size: 15px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ap-ans { font-size: 15px; line-height: 1.58; overflow-wrap: anywhere; }
+.ap-ans p { margin: 0 0 .65em; }
+.ap-ans ul, .ap-ans ol { margin: .3em 0 .7em; padding-left: 1.3em; }
+.ap-ans li { margin: .2em 0; }
+.ap-ans h1, .ap-ans h2, .ap-ans h3 { font-size: 15.5px; margin: .8em 0 .35em; }
+.ap-ans .katex-display { margin: .6em 0; overflow-x: auto; overflow-y: hidden; }
+.cite {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; margin: 0 1px 0 3px;
+  border-radius: 6px; background: rgba(150, 210, 255, .22); color: #fff; font-size: 11px; font-weight: 800; text-decoration: none; vertical-align: 2px; line-height: 1;
+}
+.cite:hover { background: rgba(150, 210, 255, .45); }
+.cite.file { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.ap-steps { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; font-size: 13.5px; color: rgba(255, 255, 255, .75); }
+.ap-secs { opacity: .55; font-variant-numeric: tabular-nums; }
+.ap-steps .linkbtn { margin-left: auto; font-size: 13px; }
+.ap-spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .25); border-top-color: #fff; animation: apspin .8s linear infinite; flex: none; }
+@keyframes apspin { to { transform: rotate(360deg); } }
+.ap-err { margin-top: 6px; padding: 10px 14px; border-radius: 12px; background: rgba(255, 122, 80, .14); color: #ffc4b0; font-size: 14px; }
+.ap-src { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.ap-src-h { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .5; margin-right: 2px; }
+.ap-s { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 10px 4px 5px; border-radius: 99px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1); color: #fff; text-decoration: none; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ap-s b { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: rgba(150, 210, 255, .25); font-size: 10.5px; }
+.ap-s:hover { background: rgba(255, 255, 255, .14); }
+.ap-meta { margin-top: 8px; font-size: 11.5px; opacity: .42; }
+.ap-empty { padding: 6px 0; }
+.ap-empty p { margin: 0 0 14px; font-size: 15px; line-height: 1.5; opacity: .78; }
+.ap-sugg { display: flex; flex-wrap: wrap; gap: 8px; }
+.ap-sugg button { background: var(--chip); border: 1px solid var(--edge); color: #fff; border-radius: 99px; padding: 8px 13px; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; }
+.ap-sugg button:hover { background: rgba(255, 255, 255, .2); }
+.ap-setup { margin: 4px 0 16px; padding: 16px 18px; border-radius: 16px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); font-size: 14.5px; line-height: 1.5; }
+.ap-setup b { display: block; font-size: 15.5px; margin-bottom: 6px; }
+.ap-setup ol { margin: 6px 0 12px; padding-left: 1.3em; }
+.ap-setup li { margin: 6px 0; }
+.ap-setup p { margin: 4px 0 12px; }
+.ap-setup a { color: #96d2ff; }
+.ap-setup code { display: inline-block; margin: 4px 0 0; padding: 4px 8px; border-radius: 7px; background: rgba(0, 0, 0, .35); font: 600 13px/1.4 ui-monospace, Menlo, monospace; user-select: all; overflow-wrap: anywhere; }
+.ap-setup li > code:first-of-type { display: block; width: fit-content; max-width: 100%; }
+.ap-setup small { display: block; margin-top: 12px; opacity: .6; font-size: 12.5px; }
+.ap-keyrow { display: flex; gap: 8px; }
+.ap-keyrow input { flex: 1; min-width: 0; padding: 9px 13px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .18); background: rgba(0, 0, 0, .3); color: #fff; font: 14px ui-monospace, Menlo, monospace; outline: none; }
+.ap-keyrow input:focus { border-color: rgba(255, 255, 255, .45); }
+
+.ap-form { display: flex; align-items: flex-end; gap: 10px; padding: 12px 16px 8px 18px; border-top: 1px solid rgba(255, 255, 255, .08); }
+.ap-form textarea {
+  flex: 1; min-width: 0; resize: none; max-height: 160px; padding: 12px 15px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .07); color: #fff; font: 500 15px/1.4 'Inter Tight', system-ui, sans-serif; letter-spacing: -.01em; outline: none;
+}
+.ap-form textarea:focus { border-color: rgba(255, 255, 255, .4); background: rgba(255, 255, 255, .09); }
+.ap-form textarea::placeholder { color: rgba(255, 255, 255, .5); }
+.ap-send { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff; color: #0a0a14; font-size: 20px; font-weight: 800; cursor: pointer; transition: transform .12s, opacity .15s; }
+.ap-send:active { transform: scale(.92); }
+.ap-send:disabled { opacity: .35; cursor: default; }
+.ap-foot { display: flex; justify-content: space-between; gap: 12px; padding: 0 22px 12px; font-size: 11.5px; opacity: .48; }
+
+@media (max-width: 720px) {
+  .ask { position: relative; right: auto; top: auto; bottom: auto; order: -1; flex: none; width: 42px; padding: 0; justify-content: center; }
+  .ask span { display: none; }
+  .navbar.searching .ask { opacity: 0; pointer-events: none; }
+  .ap { top: 12px; width: calc(100vw - 16px); height: calc(100dvh - 24px); border-radius: 20px; }
+  .ap-head { padding: 12px 10px 10px 16px; flex-wrap: wrap; }
+  .ap-title { flex-basis: calc(100% - 90px); }
+  .ap-eng { order: 3; width: 100%; }
+  .ap-eng button { flex: 1; }
+  .ap-body { padding: 12px 14px 6px; }
+  .ap-form { padding: 10px 10px 8px 12px; }
+  .ap-form textarea { font-size: 16px; }
+  .ap-foot { flex-direction: column; gap: 2px; padding: 0 14px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .ap, .ask { transition: none !important; } .ap-spin { animation-duration: 2s; } }
+
+/* web switch, Canvas links, practise chips */
+.ap-web { flex: none; height: 34px; padding: 0 12px; border-radius: 99px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .05); color: rgba(255, 255, 255, .6); font: 700 12.5px/1 'Inter Tight', system-ui, sans-serif; cursor: pointer; }
+.ap-web::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: rgba(255, 255, 255, .3); vertical-align: 1px; }
+.ap-web.on { color: #fff; border-color: rgba(150, 210, 255, .5); background: rgba(150, 210, 255, .14); }
+.ap-web.on::before { background: #7fe0a8; }
+.ap-cv { margin-left: -2px; padding: 4px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 700; color: #96d2ff; text-decoration: none; background: rgba(150, 210, 255, .08); white-space: nowrap; }
+.ap-cv:hover { background: rgba(150, 210, 255, .2); }
+.ap-prac { margin-top: 12px; }
+.ap-prac .ap-s b { min-width: auto; padding: 0 6px; font-size: 10px; text-transform: uppercase; letter-spacing: .03em; }
+.ap-prac .q-done b { background: rgba(255, 255, 255, .85); color: #0a0a14; }
+.ap-prac .q-stuck b { background: rgba(255, 122, 80, .45); }
+.ap-ans a[href^="http"] { color: #96d2ff; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+@media (max-width: 720px) { .ap-web { order: 2; } }
+
+/* half-width windows: the pills sit a row lower (see app.css), so the panel opens below them */
+@media (min-width: 721px) and (max-width: 980px) { .ap { top: 122px; height: min(calc(100vh - 142px), 780px); } }
+/* the billing note: commands sit inside the sentences */
+.ap-setup.inline li > code:first-of-type { display: inline-block; width: auto; }
+.ap-setup.inline code { margin: 1px 0; padding: 2px 6px; }
+.ap-setup strong { font-weight: 700; }

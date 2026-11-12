@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Imperial · Year 2 Physics Dashboard</title>
+<link rel="icon" type="image/png" href="/static/favicon.png">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="apple-mobile-web-app-title" content="Imperial">
+<meta name="application-name" content="Imperial">
+<meta name="theme-color" content="#000000">
+<link rel="preload" href="/static/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/static/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="/static/app.css?v=20261110q">
+<link rel="stylesheet" href="/static/search.css?v=20261110q">
+<link rel="stylesheet" href="/static/ask.css?v=20261110q">
+<link rel="stylesheet" href="/static/buddy.css?v=20261110q">
+<link rel="stylesheet" href="/static/study.css?v=20261110q">
+</head>
+<body>
+<canvas class="bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="name">Omri Shahar</div>
+  <div class="navbar">
+  <nav class="nav-main" aria-label="Main">
+    <a href="#home" data-view="home" class="on" aria-current="page">Home</a>
+    <a href="#sheets" data-view="sheets">Problem sheets</a>
+    <a href="#revision" data-view="revision">Revision</a>
+    <a href="#deadlines" data-view="deadlines">Deadlines</a>
+    <a href="#marks" data-view="marks">Marks</a>
+  </nav>
+  <div class="search" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+    <input id="q" type="search" placeholder="Search" autocomplete="off" spellcheck="false" enterkeyhint="go"
+      aria-label="Search topics, problem sheets, deadlines and your notes" role="combobox" aria-controls="sr" aria-expanded="false" aria-autocomplete="list">
+    <kbd aria-hidden="true">/</kbd>
+  </div>
+  <div class="sr" id="sr" role="listbox" aria-label="Search results" hidden></div>
+  </div>
+  <div class="date" id="today"></div>
+</header>
+
+<section class="hero">
+  <div class="lock">
+    <h1><span id="title">IMPERIAL</span></h1>
+    <p><span id="subtitle">Year 2 Physics Dashboard</span></p>
+  </div>
+</section>
+
+<main class="grid view" id="view-home">
+  <article class="w wide hu" id="w-heads" hidden></article>
+  <article class="w hc" id="w-sheets"></article>
+  <article class="w hc" id="w-revision"></article>
+  <article class="w hc" id="w-deadlines"></article>
+  <article class="w hc" id="w-marks"></article>
+
+  <article class="w wide wk" id="w-week">
+    <div class="wk-head">
+      <div class="k"><span class="wk-title">Week ahead</span></div>
+      <div class="wk-tools">
+        <div class="legend"><span class="l1"><i></i>Class</span><span class="l2"><i></i>Deadline</span><span class="l3"><i></i>Revision</span></div>
+        <div class="nav">
+          <button class="btn icon" data-shift="-7" aria-label="Previous week">&#8592;</button>
+          <button class="btn" data-shift="0">Today</button>
+          <button class="btn icon" data-shift="7" aria-label="Next week">&#8594;</button>
+        </div>
+      </div>
+    </div>
+    <div class="days"></div>
+  </article>
+</main>
+
+<main class="grid view" id="view-sheets" hidden></main>
+<main class="grid view" id="view-revision" hidden></main>
+<main class="grid view" id="view-deadlines" hidden></main>
+
+<main class="grid view" id="view-marks" hidden></main>
+
+
+<div class="toast" role="status" aria-live="polite"></div>
+<script src="/static/vendor/marked.min.js"></script>
+<script src="/static/vendor/katex/katex.min.js"></script>
+<script src="/static/vendor/katex/auto-render.min.js"></script>
+<script src="/static/bg.js"></script>
+<script src="/static/app.js?v=20261110q"></script>
+<script src="/static/heads.js?v=20261110q"></script>
+<script src="/static/whatif.js?v=20261110q"></script>
+<script src="/static/papers.js?v=20261110q"></script>
+<script src="/static/cards.js?v=20261110q"></script>
+<script src="/static/sky.js?v=20261110q"></script>
+<script src="/static/demos.js?v=20261110q"></script>
+<script src="/static/phone.js?v=20261110q"></script>
+<script src="/static/study.js?v=20261110q"></script>
+<script src="/static/recap.js?v=20261110q"></script>
+<script src="/static/search.js?v=20261110q"></script>
+<script src="/static/ask.js?v=20261110q"></script>
+<script src="/static/voice.js?v=20261110q"></script>
+<script src="/static/buddy.js?v=20261110q"></script>
+<script src="/static/highlight.js?v=20261110q"></script>
+</body>
+</html>

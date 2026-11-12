@@ -1,0 +1,95 @@
+
+/* ---------------- search: a glass pill beside the nav ----------------
+   The nav stays centred; the search pill hangs off its right edge. Wide screens: the pill shows
+   "Search /" and widens when you type. Narrower screens: a round icon that, when opened, takes over the
+   nav bar while you type. Phones: an icon at the end of the nav row, taking over that row. */
+.navbar { position: absolute; left: 50%; transform: translateX(-50%); z-index: 3; }
+.navbar .nav-main { position: relative; left: auto; transform: none; transition: opacity .2s; }
+.search {
+  position: absolute; left: calc(100% + 8px); top: 0; bottom: 0; width: 132px; display: flex; align-items: center; gap: 9px; padding: 0 12px 0 15px;
+  border-radius: 99px; background: var(--glass); border: 1px solid var(--edge); cursor: text;
+  backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  transition: width .38s var(--ease), left .38s var(--ease), border-color .15s, background .15s;
+}
+.search:hover { border-color: rgba(255, 255, 255, .24); }
+.search svg { flex: none; width: 17px; height: 17px; opacity: .85; }
+.search input {
+  flex: 1; min-width: 0; width: 100%; background: none; border: 0; outline: none; color: #fff; padding: 0;
+  font: 600 15px/1 'Inter Tight', system-ui, sans-serif; letter-spacing: -.01em; -webkit-appearance: none; appearance: none;
+}
+.search input::placeholder { color: rgba(255, 255, 255, .8); }
+.search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.search kbd, .sr kbd {
+  flex: none; font: 600 11.5px/1 'Inter Tight', system-ui, sans-serif; padding: 4px 6px; border-radius: 6px;
+  background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .14); color: rgba(255, 255, 255, .85);
+}
+.navbar.searching .search { border-color: rgba(255, 255, 255, .34); background: rgba(10, 12, 26, .62); }
+.navbar.searching .search kbd, .search.has-text kbd { display: none; }
+.sb-wide.searching .search { width: var(--sw, 300px); }
+.navbar:not(.sb-ready) .search { transition: none; }
+
+/* narrower desktops: an icon that takes over the nav bar while you search */
+.sb-compact .search { width: 46px; padding: 0; justify-content: center; cursor: pointer; }
+.sb-compact .search { gap: 0; }
+.sb-compact .search input { width: 0; flex: 0 0 0; opacity: 0; }
+.sb-compact .search kbd { display: none; }
+.sb-compact.searching .search { gap: 9px; }
+.sb-compact.searching .search { left: 0; width: 100%; padding: 0 14px 0 16px; justify-content: flex-start; cursor: text; }
+.sb-compact.searching .search input { flex: 1; opacity: 1; }
+.sb-compact.searching .nav-main { opacity: 0; pointer-events: none; }
+
+/* the results, under the bar */
+.sr {
+  position: absolute; top: calc(100% + 12px); left: 50%; width: min(720px, calc(100vw - 2 * var(--pad))); max-height: min(72vh, 700px); overflow: auto;
+  padding: 8px; border-radius: 22px; background: rgba(9, 11, 24, .86); border: 1px solid rgba(255, 255, 255, .15);
+  backdrop-filter: blur(28px) saturate(1.2); -webkit-backdrop-filter: blur(28px) saturate(1.2); box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+  opacity: 0; transform: translate(-50%, -6px); transition: opacity .18s, transform .28s var(--ease); scrollbar-width: thin; overscroll-behavior: contain;
+}
+.sr.on { opacity: 1; transform: translate(-50%, 0); }
+.sr-g + .sr-g { margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(255, 255, 255, .08); }
+.sr-h { display: flex; justify-content: space-between; padding: 10px 12px 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .55; }
+.sr-row { display: flex; align-items: flex-start; gap: 14px; padding: 10px 12px; border-radius: 14px; color: #fff; text-decoration: none; transition: background .12s; }
+.sr-row.act { background: rgba(255, 255, 255, .1); }
+.sr-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.sr-t { font-size: 15.5px; font-weight: 650; letter-spacing: -.015em; line-height: 1.25; }
+.sr-m { font-size: 12.5px; font-weight: 500; opacity: .6; }
+.sr-s { font-size: 13.5px; line-height: 1.45; opacity: .85; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.sr-s .katex { font-size: 1em; }
+.sr mark { background: rgba(255, 122, 80, .3); color: #fff; border-radius: 3px; padding: 0 1px; }
+.sr-c { flex: none; margin-top: 1px; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 99px; background: var(--chip); white-space: nowrap; opacity: .9; }
+.sr-c.st-ok, .sr-c.qs-done, .sr-c.dl-done { background: rgba(255, 255, 255, .9); color: #0a0a14; }
+.sr-c.st-sh, .sr-c.qs-attempted { background: rgba(255, 255, 255, .22); }
+.sr-c.st-dk, .sr-c.qs-stuck, .sr-c.dl-late { background: rgba(255, 122, 80, .32); }
+.sr-more { display: block; margin: 2px 12px 6px; padding: 6px 0; background: none; border: 0; color: #fff; font-size: 13px; font-weight: 600; opacity: .7; cursor: pointer; }
+.sr-more:hover { opacity: 1; text-decoration: underline; }
+.sr-hint, .sr-empty { display: flex; flex-direction: column; gap: 8px; padding: 16px 14px 10px; font-size: 14px; line-height: 1.45; }
+.sr-hint span, .sr-empty small { opacity: .72; font-size: 13.5px; }
+.sr-hint b { font-size: 16px; }
+.sr-try { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; opacity: 1 !important; }
+.sr-try button { background: var(--chip); border: 1px solid var(--edge); color: #fff; border-radius: 99px; padding: 5px 11px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.sr-try button:hover { background: rgba(255, 255, 255, .2); }
+.sr-foot { display: flex; gap: 16px; padding: 10px 12px 4px; margin-top: 4px; border-top: 1px solid rgba(255, 255, 255, .08); font-size: 12px; opacity: .55; }
+.sr-foot kbd { margin-right: 3px; padding: 2px 5px; }
+
+/* phones: the nav row scrolls; the search icon sits at its end and takes the row over while you search */
+@media (max-width: 720px) {
+  .navbar { position: relative; left: auto; transform: none; order: 3; width: 100%; display: flex; gap: 8px; }
+  .navbar .nav-main { order: 0; flex: 1; min-width: 0; width: auto; }
+  .search { position: relative; left: auto; top: auto; bottom: auto; flex: none; width: 42px; padding: 0; justify-content: center; }
+  .search { gap: 0; }
+  .search input { width: 0; flex: 0 0 0; opacity: 0; }
+  .search kbd { display: none; }
+  .navbar.searching .search { gap: 9px; }
+  .navbar.searching .search { position: absolute; inset: 0; width: auto; padding: 0 14px; justify-content: flex-start; }
+  .navbar.searching .search input { flex: 1; opacity: 1; font-size: 16px; }
+  .navbar.searching .nav-main { opacity: 0; pointer-events: none; }
+  .sr { width: calc(100vw - 28px); max-height: 66vh; }
+  .sr-foot { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .search, .sr { transition: none !important; } }
+
+/* "Showing results for …" when a misspelt word was swapped for the nearest real one */
+.sr-fix { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; margin: 4px 4px 6px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 122, 80, .12); font-size: 14px; }
+.sr-fix b { font-weight: 700; }
+.sr-fix button { background: none; border: 0; padding: 0; color: rgba(255, 255, 255, .75); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.sr-fix button:hover { color: #fff; }

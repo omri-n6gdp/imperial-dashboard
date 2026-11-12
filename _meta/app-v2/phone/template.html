@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Imperial · on the go</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..900&display=swap" rel="stylesheet">
+<style>
+:root { --accent: #ff7a50; --track: rgba(255,255,255,.14); --glass: rgba(6,8,20,.5); --edge: rgba(255,255,255,.12); --blue: rgb(150,210,255); --pad: 18px; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #000; color: #fff; }
+body { font-family: 'Inter Tight', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -.02em; min-height: 100vh; }
+a { color: inherit; }
+canvas.bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; }
+.grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-size: 128px 128px; opacity: .18; }
+.wrap { position: relative; z-index: 1; width: min(720px, 100%); margin: 0 auto; padding: 18px var(--pad) 60px; }
+.top { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; }
+.top span:last-child { font-weight: 500; opacity: .85; }
+.hero { text-align: center; margin: 34px 0 22px; }
+.hero h1 { margin: 0; font-weight: 900; letter-spacing: -.05em; line-height: .8; font-size: min(20.5vw, 150px); }
+.hero p { margin: 4px 0 0; font-weight: 700; letter-spacing: -.03em; font-size: 16px; }
+.tabs { position: sticky; top: 10px; z-index: 5; display: flex; gap: 3px; padding: 4px; margin: 0 auto 16px; width: fit-content; max-width: 100%; overflow-x: auto; scrollbar-width: none;
+  border-radius: 99px; background: rgba(6,8,20,.55); border: 1px solid var(--edge); backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2); }
+.tabs a { text-decoration: none; padding: 8px 15px; border-radius: 99px; font-size: 14.5px; font-weight: 600; opacity: .8; white-space: nowrap; }
+.tabs a.on { opacity: 1; background: #fff; color: #0a0a14; }
+.view[hidden] { display: none; }
+.view { display: grid; gap: 12px; animation: rise .35s cubic-bezier(.2,.8,.2,1); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.w { border-radius: 22px; padding: 18px; background: var(--glass); border: 1px solid var(--edge); backdrop-filter: blur(24px) saturate(1.2); -webkit-backdrop-filter: blur(24px) saturate(1.2); min-width: 0; }
+.k { display: flex; justify-content: space-between; gap: 12px; font-size: 11.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.k > span { opacity: .66; } .k .alert { color: var(--accent); opacity: 1; }
+.cd { display: flex; gap: 10px; margin: 12px 0 8px; font-variant-numeric: tabular-nums; }
+.cd span b { font-size: 50px; font-weight: 900; letter-spacing: -.05em; line-height: 1; }
+.cd span i { font-style: normal; font-size: 18px; font-weight: 800; opacity: .55; margin-left: 2px; }
+.ttl { font-size: 23px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
+.sub { font-size: 13.5px; opacity: .72; margin-top: 4px; line-height: 1.4; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 99px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #fff; text-decoration: none; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+.btn.solid { background: #fff; color: #0a0a14; border-color: #fff; }
+.late { margin-top: 10px; font-size: 13px; color: var(--accent); font-weight: 600; }
+.ev { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255,255,255,.08); align-items: baseline; }
+.ev:first-of-type { border-top: 0; }
+.ev .tm { font-size: 13px; font-weight: 700; opacity: .75; font-variant-numeric: tabular-nums; }
+.ev .nm { font-size: 15px; font-weight: 600; line-height: 1.3; min-width: 0; }
+.ev .nm small { display: block; font-size: 12.5px; font-weight: 500; opacity: .6; margin-top: 1px; }
+.ev.dead .nm { color: #ffb59c; } .ev.dead .tm { color: var(--accent); opacity: 1; }
+.ev.rev .nm::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; border: 1.5px dashed rgba(255,255,255,.75); margin-right: 7px; vertical-align: 1px; }
+.ev.maybe { opacity: .55; }
+.ev.past { opacity: .38; }
+.ev.done .nm { text-decoration: line-through; opacity: .6; }
+.day h3 { margin: 0 0 4px; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; display: flex; gap: 8px; align-items: baseline; }
+.day h3 b { font-size: 26px; letter-spacing: -.04em; text-transform: none; }
+.day h3 span { opacity: .6; }
+.day.today { border-color: rgba(255,255,255,.35); }
+.free { font-size: 14px; opacity: .4; padding: 6px 0; }
+.hu { display: grid; gap: 8px; margin-top: 10px; }
+.hu div { display: flex; gap: 10px; align-items: baseline; font-size: 14px; line-height: 1.35; }
+.hu i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.8); transform: translateY(-1px); }
+.hu .k-need i, .hu .k-late i { background: var(--accent); } .hu .k-new i { background: var(--blue); } .hu .k-soon i { background: transparent; border: 1.5px solid rgba(255,255,255,.8); } .hu .k-stale { opacity: .6; }
+.hu b { font-weight: 700; } .hu span { opacity: .7; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.stat { border-radius: 16px; padding: 12px; background: rgba(255,255,255,.06); }
+.stat b { display: block; font-size: 30px; font-weight: 900; letter-spacing: -.04em; line-height: 1; }
+.stat b small { font-size: 15px; opacity: .6; }
+.stat span { font-size: 12px; opacity: .65; }
+.li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,.08); align-items: baseline; }
+.li:first-of-type { border-top: 0; }
+.li b { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.li .r { font-size: 13px; font-weight: 700; text-align: right; white-space: nowrap; }
+.li .s { grid-column: 1 / -1; font-size: 12.5px; opacity: .62; line-height: 1.4; }
+.li .r.over { color: var(--accent); }
+.li.done { opacity: .5; }
+.li a.cv { color: var(--blue); text-decoration: none; font-weight: 700; }
+.wk { margin: 6px 0 2px; font-size: 11.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; opacity: .55; }
+.big { font-size: 64px; font-weight: 900; letter-spacing: -.05em; line-height: .95; margin-top: 10px; }
+.big small { font-size: 26px; opacity: .6; }
+.bar { height: 7px; border-radius: 99px; background: var(--track); overflow: hidden; margin-top: 12px; display: flex; }
+.bar i { display: block; background: #fff; }
+.bar i.lost { background: rgba(255,255,255,.35); }
+.need { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.need div { border-radius: 14px; padding: 10px 12px; background: rgba(255,255,255,.06); }
+.need span { display: block; font-size: 11.5px; font-weight: 700; opacity: .7; }
+.need b { font-size: 22px; font-weight: 900; letter-spacing: -.03em; }
+.mini { display: grid; gap: 6px; margin-top: 10px; }
+.mini div { display: grid; grid-template-columns: 70px minmax(0, 1fr) 54px; gap: 10px; align-items: center; font-size: 13px; font-weight: 700; }
+.mini .bar { margin: 0; height: 6px; }
+.mini .n { text-align: right; opacity: .75; font-variant-numeric: tabular-nums; }
+details summary { cursor: pointer; font-size: 13px; font-weight: 700; opacity: .75; list-style: none; padding: 6px 0; }
+details summary::-webkit-details-marker { display: none; }
+.foot { margin-top: 18px; font-size: 12px; opacity: .55; text-align: center; line-height: 1.5; }
+.stale { color: #ffd27a; opacity: 1; }
+@media (min-width: 700px) { .cd span b { font-size: 64px; } .big { font-size: 80px; } }
+@media (prefers-reduced-motion: reduce) { .view { animation: none; } }
+</style>
+</head>
+<body>
+<canvas class="bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="top"><span>Omri Shahar</span><span id="today"></span></div>
+  <div class="hero"><h1>IMPERIAL</h1><p>Year 2 · on the go</p></div>
+  <nav class="tabs" aria-label="Views"><a href="#today" data-v="today">Today</a><a href="#week" data-v="week">Week</a><a href="#deadlines" data-v="deadlines">Deadlines</a><a href="#marks" data-v="marks">Marks</a></nav>
+  <main id="v-today" class="view"></main>
+  <main id="v-week" class="view" hidden></main>
+  <main id="v-deadlines" class="view" hidden></main>
+  <main id="v-marks" class="view" hidden></main>
+  <div class="foot" id="foot"></div>
+</div>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+/* the dashboard's background */
+__BG_JS__
+</script>
+<script>
+'use strict';
+const D = JSON.parse(document.getElementById('data').textContent);
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = n => String(n).padStart(2, '0');
+const P = s => { const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/); return m ? new Date(+m[1], +m[2] - 1, +m[3], m[4] ? +m[4] : 0, m[5] ? +m[5] : 0) : null; };
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const day0 = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const dayDiff = (a, b) => Math.round((day0(a) - day0(b)) / 864e5);
+const hm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const pc = (x, dp = 0) => (Math.round(x * 10 ** dp) / 10 ** dp).toFixed(dp);
+function nice(d) { const n = d.getDate(), s = (n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th'); return d.toLocaleDateString('en-GB', { weekday: 'long' }) + ' ' + n + s + ' ' + MON[d.getMonth()]; }
+function when(d, now, timed) { const n = dayDiff(d, now), base = n === 0 ? 'today' : n === 1 ? 'tomorrow' : n === -1 ? 'yesterday' : `${DAYS[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`; return base + (timed ? ' ' + hm(d) : ''); }
+function rel(d, now) { const n = dayDiff(d, now); return n < 0 ? 'overdue' : n === 0 ? 'today' : n === 1 ? 'tomorrow' : n < 14 ? `in ${n} days` : `in ${Math.round(n / 7)} weeks`; }
+const parts = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return [[Math.floor(s / 86400), 'd'], [Math.floor(s / 3600) % 24, 'h'], [Math.floor(s / 60) % 60, 'm'], [s % 60, 's']]; };
+const cdHTML = ms => parts(ms).map(([v, u], i) => `<span><b>${i ? pad(v) : v}</b><i>${u}</i></span>`).join('');
+
+/* events of one day, with the ones already over dimmed by the clock now */
+function evHTML(e, d, now) {
+  const isToday = dayDiff(d, now) === 0, h = now.getHours() + now.getMinutes() / 60;
+  const past = isToday && e.kind !== 'dead' && e.b != null && e.b <= h;
+  const [t0, room] = String(e.time).split(' · '), t = t0.split('–')[0];
+  return `<div class="ev ${e.kind}${e.maybe ? ' maybe' : ''}${past ? ' past' : ''}${e.done ? ' done' : ''}"><span class="tm">${esc(t)}</span><span class="nm">${esc(e.name)}${room ? `<small>${esc(room)}</small>` : ''}</span></div>`;
+}
+function dayCard(x, now) {
+  const d = P(x.date), n = dayDiff(d, now);
+  return `<article class="w day${n === 0 ? ' today' : ''}"><h3><b>${d.getDate()}</b>${DAYS[d.getDay()]}<span>${n === 0 ? 'today' : n === 1 ? 'tomorrow' : MON[d.getMonth()]}</span></h3>
+    ${x.events.length ? x.events.map(e => evHTML(e, d, now)).join('') : '<div class="free">Free</div>'}</article>`;
+}
+const openDl = now => D.deadlines.filter(x => !x.done).sort((a, b) => P(a.end) - P(b.end));
+
+function today(now) {
+  const open = openDl(now), next = open.find(x => P(x.end) >= now), late = open.filter(x => P(x.end) < now);
+  const td = D.days.find(x => x.date === iso(now));
+  const S = D.sheets, R = D.revision, M = D.marks;
+  const nextCard = next ? `<article class="w"><div class="k"><span>Next up · ${esc(next.mod)}</span><span>${esc(when(P(next.due), now, next.timed))}</span></div>
+      <div class="cd" data-count="${P(next.end).getTime()}">${cdHTML(P(next.end) - now)}</div><div class="ttl">${esc(next.title)}</div>
+      <div class="sub">${esc(next.worthLong)}${next.hours ? ` · ~${next.hours} h` : ''}</div>${next.url ? `<div class="btns"><a class="btn solid" href="${esc(next.url)}">Open on Canvas ↗</a></div>` : ''}
+      ${late.length ? `<div class="late">${late.length} overdue: ${late.map(x => esc(x.title)).join(', ')}</div>` : ''}</article>` : '';
+  const heads = D.heads.filter(h => h.k !== 'cards' && h.k !== 'stale');
+  const nx = R.next && P(R.next.when);
+  return nextCard + (td ? `<article class="w day today"><div class="k"><span>Today</span><span>${esc(DAYS[now.getDay()])} ${now.getDate()} ${MON[now.getMonth()]}</span></div><div style="margin-top:6px">${td.events.length ? td.events.map(e => evHTML(e, now, now)).join('') : '<div class="free">Nothing on. A good day to get ahead.</div>'}</div></article>`
+      : `<article class="w"><div class="free">This snapshot doesn't reach today. Open the dashboard on your Mac to refresh it.</div></article>`)
+    + (heads.length ? `<article class="w"><div class="k"><span>Heads-up</span></div><div class="hu">${heads.map(h => `<div class="k-${esc(h.k)}"><i></i><span><b>${esc(h.title)}</b> <span>${esc(h.detail)}</span></span></div>`).join('')}</div></article>` : '')
+    + `<article class="w"><div class="stats"><div class="stat"><b>${S.total ? Math.round(100 * S.done / S.total) : 0}<small>%</small></b><span>sheets done · ${S.done}/${S.total}</span></div>
+      <div class="stat"><b>${R.ok}<small>/${R.total}</small></b><span>topics known</span></div><div class="stat"><b>${M.avg != null ? Math.round(M.avg) + '<small>%</small>' : '—'}</b><span>average mark</span></div></div>
+      <div class="hu">${S.cont ? `<div><i></i><span><b>Continue</b> <span>${esc(S.cont)}</span></span></div>` : ''}${nx && nx >= day0(now) ? `<div><i></i><span><b>Next revision</b> <span>${esc(when(nx, now, true))}: ${esc(R.next.topic)}</span></span></div>` : ''}${R.cards ? `<div><i></i><span><b>${R.cards} flashcards</b> <span>due on the dashboard</span></span></div>` : ''}</div></article>`;
+}
+let span = 7;
+function week(now) {
+  const list = D.days.filter(x => P(x.date) >= day0(now)).slice(0, span);
+  if (!list.length) return '<article class="w"><div class="free">This snapshot has no days left. Open the dashboard on your Mac to refresh it.</div></article>';
+  const more = D.days.filter(x => P(x.date) >= day0(now)).length > span;
+  return list.map(x => dayCard(x, now)).join('') + (more ? '<button class="btn" data-more style="justify-self:center">Show the week after</button>' : '');
+}
+function deadlines(now) {
+  const open = openDl(now), monday = d => { const x = day0(d); x.setDate(x.getDate() - (x.getDay() + 6) % 7); return x; };
+  let last = '', rows = '';
+  for (const x of open) {
+    const d = P(x.due), late = P(x.end) < now, wk = late ? 'Overdue' : (() => { const n = Math.round((monday(d) - monday(now)) / (7 * 864e5)); return n === 0 ? 'This week' : n === 1 ? 'Next week' : `Week of ${monday(d).getDate()} ${MON[monday(d).getMonth()]}`; })();
+    if (wk !== last) { rows += `<div class="wk">${esc(wk)}</div>`; last = wk; }
+    rows += `<div class="li"><b>${esc(x.title)}</b><span class="r${late ? ' over' : ''}">${esc(late ? 'overdue' : rel(d, now))}</span>
+      <span class="s">${esc(x.mod)} · ${esc(when(d, now, x.timed))} · ${esc(x.worthLong)}${x.hours ? ` · ~${x.hours} h` : ''}${x.url ? ` · <a class="cv" href="${esc(x.url)}">Canvas ↗</a>` : ''}</span></div>`;
+  }
+  const todos = D.todos.filter(x => P(x.due) >= day0(now));
+  const done = D.deadlines.filter(x => x.done);
+  return `<article class="w"><div class="k"><span>Every deadline</span><span>${open.length} to go · marked work</span></div><div style="margin-top:6px">${rows || '<div class="free">Nothing left to hand in.</div>'}</div></article>`
+    + (todos.length ? `<article class="w"><div class="k"><span>Also to do</span><span>not marked</span></div><div style="margin-top:6px">${todos.map(x => `<div class="li"><b>${esc(x.title)}</b><span class="r">${esc(rel(P(x.due), now))}</span><span class="s">${esc(when(P(x.due), now, x.timed))}${x.url ? ` · <a class="cv" href="${esc(x.url)}">Canvas ↗</a>` : ''}</span></div>`).join('')}</div></article>` : '')
+    + (done.length ? `<article class="w"><details><summary>Done · ${done.length}</summary>${done.map(x => `<div class="li done"><b>${esc(x.title)}</b><span class="r">${esc(x.doneLabel)}</span><span class="s">${esc(x.mod)} · ${esc(when(P(x.due), now, x.timed))}</span></div>`).join('')}</details></article>` : '');
+}
+function marks(now) {
+  const M = D.marks, lost = M.markedW - M.banked, txt = n => n == null ? '—' : n > 100 ? 'out of reach' : n <= 0 ? 'secured' : pc(n, 0) + '%';
+  const band = M.avg == null ? '' : M.avg >= 85 ? "Dean's List pace" : M.avg >= 70 ? 'First-class pace' : M.avg >= 60 ? '2:1 pace' : 'Below a 2:1';
+  return `<article class="w"><div class="k"><span>Mark so far</span><span>${esc(band)}</span></div><div class="big">${M.avg != null ? pc(M.avg) + '<small>%</small>' : '—'}</div>
+      <div class="sub">average over the ${pc(M.markedW, 1)}% of the year marked so far · ${pc(M.banked, 1)}% of the year banked</div>
+      <div class="bar"><i style="width:${M.banked}%"></i><i class="lost" style="width:${lost}%"></i></div>
+      <div class="need">${M.need.map(n => `<div><span>${n.g === 60 ? '2:1' : n.g === 70 ? 'First' : "Dean's List"} · ${n.g}%</span><b>${txt(n.need)}</b></div>`).join('')}</div>
+      <div class="sub" style="margin-top:8px">average needed on everything still to be marked</div></article>
+    <article class="w"><div class="k"><span>Waiting to be marked</span><span>${M.waiting.length}</span></div><div style="margin-top:6px">${M.waiting.map(x => { const b = P(x.back); return `<div class="li"><b>${esc(x.name)}</b><span class="r">${b ? (x.est ? 'back ~' : 'back ') + esc(when(b, now)) : 'no date'}</span><span class="s">${esc(x.mod)} · ${esc(x.worth)}</span></div>`; }).join('') || '<div class="free">Nothing waiting.</div>'}</div></article>
+    ${M.recent.length ? `<article class="w"><div class="k"><span>Marks back</span></div><div style="margin-top:6px">${M.recent.map(x => `<div class="li"><b>${esc(x.name)}</b><span class="r">${x.pct}%</span><span class="s">${esc(x.mod)}</span></div>`).join('')}</div></article>` : ''}
+    <article class="w"><div class="k"><span>Problem sheets</span><span>${D.sheets.done}/${D.sheets.total}</span></div><div class="mini">${D.sheets.mods.filter(m => m.total).map(m => `<div><span>${esc(m.short)}</span><span class="bar"><i style="width:${100 * m.done / m.total}%"></i></span><span class="n">${m.done}/${m.total}</span></div>`).join('')}</div>
+      <div class="k" style="margin-top:16px"><span>Topics known</span><span>${D.revision.ok}/${D.revision.total}</span></div><div class="mini">${D.revision.mods.filter(m => m.total).map(m => `<div><span>${esc(m.short)}</span><span class="bar"><i style="width:${100 * m.ok / m.total}%"></i></span><span class="n">${m.ok}/${m.total}</span></div>`).join('')}</div></article>`;
+}
+
+const VIEWS = { today, week, deadlines, marks };
+let cur = '';
+function show() {
+  const v = VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : 'today', now = new Date();
+  $('#today').textContent = nice(now);
+  for (const k in VIEWS) { const el = $('#v-' + k); el.hidden = k !== v; if (k === v) el.innerHTML = VIEWS[k](now); }
+  document.querySelectorAll('.tabs a').forEach(a => { const on = a.dataset.v === v; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'); });
+  if (v !== cur) { cur = v; scrollTo(0, 0); }
+  const g = P(D.generated), age = dayDiff(now, g);
+  $('#foot').innerHTML = `<span class="${age >= 2 ? 'stale' : ''}">Snapshot from ${esc(when(g, now, true))}</span>${D.synced ? ` · Canvas data from ${esc(when(P(D.synced), now))}` : ''}<br>Read-only. It updates when your dashboard syncs; change things on the dashboard on your Mac.`;
+}
+addEventListener('hashchange', show);
+document.addEventListener('click', e => { if (e.target.closest('[data-more]')) { span = 14; show(); } });
+setInterval(() => document.querySelectorAll('[data-count]').forEach(el => { el.innerHTML = cdHTML(+el.dataset.count - Date.now()); }), 1000);
+setInterval(show, 5 * 60 * 1000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) show(); });
+/* grain, drawn once */
+(() => { try { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'), im = x.createImageData(128, 128);
+  for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  x.putImageData(im, 0, 0); document.querySelector('.grain').style.backgroundImage = `url(${c.toDataURL()})`; } catch (e) { /* no grain */ } })();
+show();
+</script>
+</body>
+</html>
